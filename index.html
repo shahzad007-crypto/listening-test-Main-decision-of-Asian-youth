@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhammad Shahzad - UTAS Ibra - GE-3 Assessment</title>
+    <style>
+        :root {
+            --oman-maroon: #800000;
+            --oman-gold: #D4AF37;
+            --oman-white: #FFFFFF;
+            --oman-grey: #f4f4f4;
+            --text-dark: #333;
+            --error-red: #d32f2f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--oman-grey);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        #app-container {
+            width: 95%;
+            max-width: 900px;
+            background: var(--oman-white);
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 8px solid var(--oman-maroon);
+            overflow: hidden;
+            position: relative;
+        }
+
+        header {
+            background: var(--oman-maroon);
+            color: var(--oman-white);
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-size: 1.2rem; color: var(--oman-gold); letter-spacing: 1px; }
+        header p { margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9; }
+        
+        .progress-bar {
+            height: 6px;
+            background: #eee;
+            width: 100%;
+        }
+        #progress-fill {
+            height: 100%;
+            background: var(--oman-gold);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .screen {
+            padding: 40px;
+            display: none;
+        }
+        .screen.active { display: block; animation: fadeIn 0.4s ease; }
+
+        .cover-page {
+            text-align: center;
+            padding: 20px;
+        }
+        .omani-crest { font-size: 5rem; margin-bottom: 20px; cursor: pointer; }
+
+        .institute-name { font-size: 1.8rem; font-weight: 800; color: var(--oman-maroon); margin-bottom: 10px; }
+        .academic-year { font-size: 1.1rem; color: var(--oman-gold); font-weight: bold; margin-bottom: 20px; }
+        .exam-title { font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid var(--oman-gold); display: inline-block; padding-bottom: 10px; }
+        
+        .section-header {
+            background: #f8f1e6;
+            padding: 20px;
+            border-left: 8px solid var(--oman-gold);
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .section-header h2 { margin: 0; color: var(--oman-maroon); font-size: 1.4rem; }
+        
+        .summary-box {
+            line-height: 2.5;
+            font-size: 1.1rem;
+            background: #fff;
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .summary-input {
+            border: none;
+            border-bottom: 2px solid var(--oman-gold);
+            width: 140px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--oman-maroon);
+            background: transparent;
+            outline: none;
+            margin: 0 5px;
+            font-size: 1rem;
+        }
+
+        .question-group {
+            display: flex;
+            flex-direction: column; gap: 20px;
+        }
+
+        .question-item {
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        .choice-label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 8px;
+        }
+        .choice-label:hover { background: #fffde7; }
+        input[type="radio"] { margin-right: 12px; cursor: pointer; }
+
+        .text-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+        .text-input:focus { border-color: var(--oman-maroon); }
+
+        .nav-footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--oman-maroon);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover { background: #600000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .btn-secondary { background: #666; }
+        .btn-secondary:hover { background: #444; }
+
+        .result-card { text-align: center; padding: 20px; }
+        .band-score { font-size: 6rem; color: var(--oman-maroon); font-weight: 900; margin: 0; }
+        .final-bold { font-weight: bold; font-size: 1.6rem; margin: 15px 0; color: var(--text-dark); }
+        .raw-score-box { background: #eee; padding: 10px 20px; display: inline-block; border-radius: 8px; }
+
+        .review-section {
+            text-align: left;
+            margin-top: 40px;
+            background: #fafafa;
+            padding: 25px;
+            border-radius: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        #lockout-msg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); color: white;
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 1000; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="lockout-msg">
+    <div style="font-size: 4rem;" id="lockout-icon">🛑</div>
+    <h1>SESSION LOCKED</h1>
+    <p>Please contact the teacher to reset the assessment.</p>
+</div>
+
+<div id="app-container">
+    <header>
+        <h1>GE-3 LISTENING ASSESSMENT</h1>
+        <p>Muhammad Shahzad_UTAS_Ibra _ 2025-2026</p>
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+    </header>
+
+    <div id="start-screen" class="screen active">
+        <div class="cover-page">
+            <div class="omani-crest" id="start-crest">🇴🇲</div>
+            <div class="institute-name">UTAS - IBRA CAMPUS</div>
+            <div class="academic-year">Academic Year 2025-2026</div>
+            <h2 class="exam-title">GE-3 LISTENING EXAM</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 20px;"><strong>Course Lecturer:</strong> Muhammad Shahzad</p>
+            
+            <div style="background: #f8f1e6; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 600px; text-align: left; border: 1px solid var(--oman-gold);">
+                <p><strong>Assessment Instructions:</strong></p>
+                <ul>
+                    <li>The audio will be played externally by the lecturer.</li>
+                    <li>You can move freely between Part 1, 2, and 3 using the navigation buttons.</li>
+                    <li>Ensure all 25 questions are answered before the final submission.</li>
+                    <li>Vocabulary Focus: Migration, Settlement, Nation, etc.</li>
+                </ul>
+            </div>
+
+            <button class="btn" id="begin-btn">BEGIN EXAMINATION</button>
+        </div>
+    </div>
+
+    <div id="exam-screen" class="screen">
+        <div id="section-container"></div>
+        <div class="nav-footer">
+            <button class="btn btn-secondary" id="prev-section-btn" style="visibility: hidden;">&larr; Back</button>
+            <button class="btn" id="next-section-btn">Next Part &rarr;</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <div class="result-card">
+            <div class="omani-crest" id="result-crest">🇴🇲</div>
+            <h2 style="color: var(--oman-maroon);">Assessment Result</h2>
+            <div class="band-score" id="band-display">0.0</div>
+            
+            <p class="final-bold">IELTS Band Score: <span id="band-val">0.0</span> / 9.0</p>
+            <div class="raw-score-box">
+                <p class="final-bold" style="margin: 0;">Raw Score: <span id="score-display">0</span> / 25</p>
+            </div>
+            
+            <div class="review-section" id="review-display"></div>
+            
+            <div style="margin-top: 30px;">
+                <button class="btn" id="reload-btn">Return Home</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const examData = [
+        {
+            title: "Part 1: Note Completion",
+            hints: "Write ONE WORD ONLY for each answer.",
+            questions: [
+                { id: 1, text: "1. Main decision of Asian youth: to ________ to Europe.", a: "emigrate", type: "text" },
+                { id: 2, text: "2. Economic goal: to find a ________ economy.", a: "stable", type: "text" },
+                { id: 3, text: "3. Choice type: migration is often a ________ decision.", a: "voluntary", type: "text" },
+                { id: 4, text: "4. Permanent goal: to find a long-term ________.", a: "settlement", type: "text" },
+                { id: 5, text: "5. Early stage activity: students often ________ for programs.", a: "volunteer", type: "text" },
+                { id: 6, text: "6. Migration type: internal movement is called ________ migration.", a: "domestic", type: "text" },
+                { id: 7, text: "7. General action: people ________ for better jobs.", a: "migrate", type: "text" },
+                { id: 8, text: "8. Origin: migrants leave their home ________.", a: "nation", type: "text" },
+                { id: 9, text: "9. Challenge: language is described as a major ________.", a: "barrier", type: "text" },
+                { id: 10, text: "10. Entry process: the official process is called ________.", a: "immigration", type: "text" }
+            ]
+        },
+        {
+            title: "Part 2: Multiple Choice",
+            hints: "Choose the correct letter A, B, or C.",
+            questions: [
+                { id: 11, text: "11. Why do young people volunteer initially?", options: ["To make money", "To gain experience", "To avoid integration"], a: 1, type: "choice" },
+                { id: 12, text: "12. What does Sarah say about the domestic situation in Asia?", options: ["It is too cold", "It is not stable enough", "It is better than Europe"], a: 1, type: "choice" },
+                { id: 13, text: "13. What is the most significant obstacle to integration?", options: ["Physical barriers", "Language barriers", "Economic barriers"], a: 1, type: "choice" },
+                { id: 14, text: "14. Domestic migration within Asia is often a step toward...", options: ["Staying home", "Returning to villages", "International emigration"], a: 2, type: "choice" },
+                { id: 15, text: "15. John says migrants maintain their...", options: ["National identity", "Old jobs", "Home nations"], a: 0, type: "choice" },
+                { id: 16, text: "16. Migration is described as a part of...", options: ["Modern art", "Human history", "Domestic science"], a: 1, type: "choice" },
+                { id: 17, text: "17. New arrivals need time to...", options: ["Settle down", "Emigrate back", "Volunteer locally"], a: 0, type: "choice" },
+                { id: 18, text: "18. Sarah thinks that for many, the move is...", options: ["Forced", "Voluntary", "Accidental"], a: 1, type: "choice" }
+            ]
+        },
+        {
+            title: "Part 3: Summary Completion",
+            hints: "Complete the summary below. Write ONE WORD ONLY for each answer.",
+            type: "summary",
+            questions: [
+                { id: 19, a: "emigration" },
+                { id: 20, a: "stable" },
+                { id: 21, a: "migrants" },
+                { id: 22, a: "barrier" },
+                { id: 23, a: "immigration" },
+                { id: 24, a: "voluntary" },
+                { id: 25, a: "domestic" }
+            ]
+        }
+    ];
+
+    let currentSectionIdx = 0;
+    let userAnswers = {};
+    let resetClicks = 0;
+
+    const beginBtn = document.getElementById('begin-btn');
+    const prevSectionBtn = document.getElementById('prev-section-btn');
+    const nextSectionBtn = document.getElementById('next-section-btn');
+    const startScreen = document.getElementById('start-screen');
+    const examScreen = document.getElementById('exam-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const reloadBtn = document.getElementById('reload-btn');
+
+    if (localStorage.getItem('oman_ge3_final_locked')) {
+        document.getElementById('lockout-msg').style.display = 'flex';
+    }
+
+    beginBtn.onclick = () => {
+        startScreen.classList.remove('active');
+        examScreen.classList.add('active');
+        renderSection();
+    };
+
+    function saveCurrentSectionAnswers() {
+        const section = examData[currentSectionIdx];
+        if (section.type === "summary") {
+            section.questions.forEach(q => {
+                const inp = document.querySelector(`input[name="q_${q.id}"]`);
+                if (inp) userAnswers[q.id] = inp.value.trim();
+            });
+        } else {
+            section.questions.forEach(q => {
+                if (q.type === 'choice') {
+                    const sel = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                    if (sel) userAnswers[q.id] = parseInt(sel.value);
+                } else {
+                    const inp = document.querySelector(`input[name="q_${q.id}"]`);
+                    if (inp) userAnswers[q.id] = inp.value.trim();
+                }
+            });
+        }
+    }
+
+    function renderSection() {
+        const section = examData[currentSectionIdx];
+        const container = document.getElementById('section-container');
+        let html = `<div class="section-header"><h2>${section.title}</h2><p style="font-size:0.9rem; color:var(--oman-maroon); margin:5px 0 0;">${section.hints}</p></div>`;
+        
+        if (section.type === "summary") {
+            html += `
+                <div class="summary-box">
+                    The conversation highlights that <strong>19.</strong> <input type="text" class="summary-input" name="q_19" value="${userAnswers[19] || ''}" placeholder="..."> often involves complex motives. For many, finding a <strong>20.</strong> <input type="text" class="summary-input" name="q_20" value="${userAnswers[20] || ''}" placeholder="..."> nation is the priority. Although <strong>21.</strong> <input type="text" class="summary-input" name="q_21" value="${userAnswers[21] || ''}" placeholder="..."> are frequently hindered by a language <strong>22.</strong> <input type="text" class="summary-input" name="q_22" value="${userAnswers[22] || ''}" placeholder="...">, the trend of <strong>23.</strong> <input type="text" class="summary-input" name="q_23" value="${userAnswers[23] || ''}" placeholder="..."> continues to grow. This <strong>24.</strong> <input type="text" class="summary-input" name="q_24" value="${userAnswers[24] || ''}" placeholder="..."> movement is distinct from <strong>25.</strong> <input type="text" class="summary-input" name="q_25" value="${userAnswers[25] || ''}" placeholder="..."> migration which occurs within borders.
+                </div>
+            `;
+        } else {
+            html += `<div class="question-group">`;
+            section.questions.forEach(q => {
+                html += `<div class="question-item"><span class="question-text">${q.text}</span>`;
+                if (q.type === 'choice') {
+                    q.options.forEach((opt, idx) => {
+                        const label = String.fromCharCode(65 + idx);
+                        const checked = userAnswers[q.id] === idx ? 'checked' : '';
+                        html += `<label class="choice-label"><input type="radio" name="q_${q.id}" value="${idx}" ${checked}><span>${label}. ${opt}</span></label>`;
+                    });
+                } else {
+                    const val = userAnswers[q.id] || '';
+                    html += `<input type="text" class="text-input" name="q_${q.id}" value="${val}" placeholder="Type word...">`;
+                }
+                html += `</div>`;
+            });
+            html += `</div>`;
+        }
+
+        container.innerHTML = html;
+        document.getElementById('progress-fill').style.width = `${((currentSectionIdx + 1) / 3) * 100}%`;
+        
+        // Navigation button logic
+        prevSectionBtn.style.visibility = (currentSectionIdx === 0) ? 'hidden' : 'visible';
+        nextSectionBtn.innerText = (currentSectionIdx === 2) ? "Finish & Submit" : "Next Part \u2192";
+    }
+
+    nextSectionBtn.onclick = () => {
+        saveCurrentSectionAnswers();
+        if (currentSectionIdx < 2) {
+            currentSectionIdx++;
+            renderSection();
+            window.scrollTo(0, 0);
+        } else {
+            if(confirm("Are you sure you want to finish the assessment?")) {
+                finalize();
+            }
+        }
+    };
+
+    prevSectionBtn.onclick = () => {
+        saveCurrentSectionAnswers();
+        if (currentSectionIdx > 0) {
+            currentSectionIdx--;
+            renderSection();
+            window.scrollTo(0, 0);
+        }
+    };
+
+    function finalize() {
+        let score = 0;
+        let reviewHtml = "";
+        
+        const allQuestions = [];
+        examData.forEach(sec => {
+            if (sec.type === "summary") {
+                sec.questions.forEach(q => {
+                    allQuestions.push({ id: q.id, text: "Summary Gap " + q.id, a: q.a, type: 'text' });
+                });
+            } else {
+                sec.questions.forEach(q => allQuestions.push(q));
+            }
+        });
+
+        allQuestions.forEach(q => {
+            let u = userAnswers[q.id], isC = false, dU = u || "[No Answer]", dC = q.a;
+            if (q.type === 'choice') { 
+                isC = u === q.a; 
+                dU = u !== undefined ? String.fromCharCode(65 + u) : "[No Answer]"; 
+                dC = String.fromCharCode(65 + q.a); 
+            } else { 
+                isC = String(u || "").toLowerCase().trim() === String(q.a).toLowerCase().trim(); 
+            }
+            if (isC) score++;
+            reviewHtml += `<div style="margin-bottom:12px; padding:10px; border-bottom:1px solid #eee;"><strong>Q${q.id}:</strong> ${q.text || 'Question ' + q.id}<br>Your Answer: <span style="color:${isC?'green':'red'}">${dU}</span>${!isC ? ' | Correct: <strong>'+dC+'</strong>' : ''}</div>`;
+        });
+        
+        localStorage.setItem('oman_ge3_final_locked', 'active');
+        examScreen.classList.remove('active');
+        resultScreen.classList.add('active');
+        
+        const band = getBand(score);
+        document.getElementById('band-display').innerText = band;
+        document.getElementById('band-val').innerText = band;
+        document.getElementById('score-display').innerText = score;
+        document.getElementById('review-display').innerHTML = reviewHtml;
+    }
+
+    function getBand(s) {
+        if (s >= 24) return "9.0"; if (s >= 22) return "8.5"; if (s >= 20) return "8.0";
+        if (s >= 18) return "7.5"; if (s >= 16) return "7.0"; if (s >= 14) return "6.5";
+        if (s >= 12) return "6.0"; if (s >= 10) return "5.5"; if (s >= 8) return "5.0"; return "4.5";
+    }
+
+    function handleReset() {
+        resetClicks++;
+        if (resetClicks >= 5) {
+            if (prompt("Teacher Code:") === "1234") {
+                localStorage.removeItem('oman_ge3_final_locked');
+                location.reload();
+            } else resetClicks = 0;
+        }
+    }
+    document.getElementById('result-crest').onclick = handleReset;
+    document.getElementById('start-crest').onclick = handleReset;
+    document.getElementById('lockout-icon').onclick = handleReset;
+    reloadBtn.onclick = () => location.reload();
+</script>
+</body>
+</html>
